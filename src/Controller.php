@@ -80,7 +80,7 @@ class Controller extends \stdClass
      * @param array $data 返回数据
      * @param integer $code 返回代码
      */
-    public function error($info, $data = [], $code = 0)
+    public function error($info, $data = [], $code = 1)
     {
         $result = ['code' => $code, 'info' => $info, 'data' => $data];
         throw new HttpResponseException(json($result));
@@ -92,7 +92,7 @@ class Controller extends \stdClass
      * @param array $data 返回数据
      * @param integer $code 返回代码
      */
-    public function success($info, $data = [], $code = 1)
+    public function success($info, $data = [], $code = 0)
     {
         $result = ['code' => $code, 'info' => $info, 'data' => $data];
         if ($this->csrf_state) Csrf::clearFormToken(Csrf::getToken());
