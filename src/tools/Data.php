@@ -134,6 +134,24 @@ class Data
     }
 
     /**
+     * 获取数据树子ID
+     * @param array $list 数据列表
+     * @param int $id 起始ID
+     * @param string $key 子Key
+     * @param string $pkey 父Key
+     * @return array
+     */
+    public static function getArrParIds($list, $id = 0, $key = 'id', $pkey = 'pid')
+    {
+        $ids = [intval($id)];
+        foreach ($list as $vo){
+            if (intval($vo[$key]) > 0 && intval($vo[$key]) === intval($id)) {
+                $ids = array_merge($ids, self::getArrParIds($list, intval($vo[$pkey]), $key, $pkey));
+            }
+        }
+        return $ids;
+    }
+    /**
      * 唯一数字编码
      * @param integer $length
      * @return string
