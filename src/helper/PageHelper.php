@@ -56,7 +56,7 @@ class PageHelper extends Helper
      * @param boolean $display 是否渲染模板
      * @param boolean $total 集合分页记录数
      * @param integer $limit 集合每页记录数
-     * @return array|mixed
+     * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -74,10 +74,7 @@ class PageHelper extends Helper
             $post = $this->app->request->post();
             $sort = intval(isset($post['sort']) ? $post['sort'] : 0);
             unset($post['action'], $post['sort']);
-            if ($this->app->db->table($this->query->getTable())->where($post)->update(['sort' => $sort]) !== false) {
-                return $this->controller->success('排序参数修改成功！', '');
-            }
-            return $this->controller->error('排序参数修改失败，请稍候再试！');
+
         }
         // 未配置 order 规则时自动按 sort 字段排序
         if (!$this->query->getOptions('order') && method_exists($this->query, 'getTableFields')) {

@@ -35,13 +35,13 @@ class DeleteHelper extends Helper
      * 数据对象主键名称
      * @var string
      */
-    protected $field;
+    protected $pkField;
 
     /**
      * 数据对象主键值
      * @var string
      */
-    protected $value;
+    protected $pkValue;
 
     /**
      * 逻辑器初始化
@@ -55,12 +55,16 @@ class DeleteHelper extends Helper
     {
         $this->where = $where;
         $this->query = $this->buildQuery($dbQuery);
-        $this->field = empty($field) ? $this->query->getPk() : $field;
-        $this->value = $this->app->request->post($this->field, null);
+        $this->pkField = empty($field) ? $this->query->getPk() : $field;
+        $this->pkValue = input($this->pkField , null);
         // 主键限制处理
-        if (!isset($this->where[$this->field]) && is_string($this->value)) {
-            $this->query->whereIn($this->field, explode(',', $this->value));
+        if (!isset($this->where[$this->pkField]) && is_string($this->pkValue)) {
+            $this->query->whereIn($this->pkField, explode(',', $this->pkValue));
         }
+        if (!isset($this->where[$this->pkField]) && is_int($this->pkValue)) {
+            $this->query->where($this->pkField,  $this->pkValue);
+        }
+
         // 前置回调处理
         if (false === $this->controller->callback('_delete_filter', $this->query, $where)) {
             return null;
@@ -71,15 +75,16 @@ class DeleteHelper extends Helper
         } else {
             $result = $this->query->where($this->where)->delete();
         }
+
         // 结果回调处理
         if (false === $this->controller->callback('_delete_result', $result)) {
             return $result;
         }
         // 回复前端结果
         if ($result !== false) {
-            $this->controller->success('数据删除成功！', '');
+            return $this->controller->success('数据删除成功！', '');
         } else {
-            $this->controller->error('数据删除失败, 请稍候再试！');
+           return $this->controller->error('数据删除失败, 请稍候再试！');
         }
     }
 

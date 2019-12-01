@@ -36,6 +36,7 @@ class TokenHelper extends Helper
     {
         $this->controller->csrf_state = true;
         if ($this->app->request->isPost() && !TokenService::instance()->checkFormToken()) {
+            return true;
             if ($return) return false;
             $this->controller->error($this->controller->csrf_message);
         } else {

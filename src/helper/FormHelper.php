@@ -41,13 +41,13 @@ class FormHelper extends Helper
      * 数据对象主键名称
      * @var array|string
      */
-    protected $field;
+    protected $pkField;
 
     /**
      * 数据对象主键值
      * @var string
      */
-    protected $value;
+    protected $pkValue;
 
     /**
      * 表单模板文件
@@ -62,7 +62,7 @@ class FormHelper extends Helper
      * @param string $field 指定数据主键
      * @param array $where 额外更新条件
      * @param array $data 表单扩展数据
-     * @return array|boolean|mixed
+     * @return array|boolean
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -71,12 +71,12 @@ class FormHelper extends Helper
     {
         $this->query = $this->buildQuery($dbQuery);
         list($this->template, $this->where, $this->data) = [$template, $where, $data];
-        $this->field = empty($field) ? ($this->query->getPk() ? $this->query->getPk() : 'id') : $field;;
-        $this->value = input($this->field, isset($data[$this->field]) ? $data[$this->field] : null);
+        $this->pkField = empty($field) ? ($this->query->getPk() ? $this->query->getPk() : 'id') : $field;;
+        $this->pkValue = input($this->pkField, isset($data[$this->pkField]) ? $data[$this->pkField] : null);
         // GET请求, 获取数据并显示表单页面
         if ($this->app->request->isGet()) {
-            if ($this->value !== null) {
-                $where = [$this->field => $this->value];
+            if ($this->pkValue !== null) {
+                $where = [$this->pkField => $this->pkValue];
                 $data = (array)$this->query->where($where)->where($this->where)->find();
             }
             $data = array_merge($data, $this->data);
@@ -89,7 +89,7 @@ class FormHelper extends Helper
         if ($this->app->request->isPost()) {
             $data = array_merge($this->app->request->post(), $this->data);
             if (false !== $this->controller->callback('_form_filter', $data, $this->where)) {
-                $result = data_save($this->query, $data, $this->field, $this->where);
+                $result = data_save($this->query, $data, $this->pkField, $this->where);
                 if (false !== $this->controller->callback('_form_result', $result, $data)) {
                     if ($result !== false) $this->controller->success('恭喜, 数据保存成功!', '');
                     $this->controller->error('数据保存失败, 请稍候再试!');
