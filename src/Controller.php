@@ -92,7 +92,7 @@ abstract class Controller extends \stdClass
      * @param array $data 返回数据
      * @param integer $code 返回代码
      */
-    public function success($info, $data = [], $code = 1)
+    public function success($info, $data = [], $code = 0)
     {
 
         throw new HttpResponseException(json([
