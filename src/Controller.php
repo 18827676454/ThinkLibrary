@@ -176,9 +176,9 @@ abstract class Controller extends \stdClass
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    protected function _page($dbQuery, $page = true, $display = true, $total = false, $limit = 0)
+    protected function _page($dbQuery, $page = true,$limit = 0, $display = false, $total = false )
     {
-        $limit = $limit ? : ( $this->app->request('param.pageSize') ? :0 );
+        $limit = $limit ? : ( $this->app->request->param('pageSize') ? :0 );
         return PageHelper::instance()->init($dbQuery, $page, $display, $total, $limit);
     }
 
