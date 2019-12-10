@@ -85,7 +85,7 @@ class SaveHelper extends Helper
         if ($result !== false) {
            return $this->controller->success('数据更新成功!', []);
         } else {
-           return $this->controller->error('数据更新失败, 请稍候再试!');
+           return $this->controller->error(1,'数据更新失败, 请稍候再试!');
         }
     }
 

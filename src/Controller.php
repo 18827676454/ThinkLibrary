@@ -50,17 +50,6 @@ abstract class Controller extends \stdClass
      */
     public $request;
 
-    /**
-     * 表单CSRF验证状态
-     * @var boolean
-     */
-    public $csrf_state = false;
-
-    /**
-     * 表单CSRF验证失败提示
-     * @var string
-     */
-    public $csrf_message = '表单令牌验证失败，请刷新页面再试！';
 
     /**
      * Controller constructor.
@@ -90,7 +79,7 @@ abstract class Controller extends \stdClass
      * @param array $data 返回数据
      * @param integer $code 返回代码
      */
-    public function error($info, $data = [], $code = 0)
+    public function error( $code = 1, $info='', $data = [])
     {
         throw new HttpResponseException(json([
             'code' => $code, 'info' => $info, 'data' => $data,
@@ -105,23 +94,13 @@ abstract class Controller extends \stdClass
      */
     public function success($info, $data = [], $code = 1)
     {
-        if ($this->csrf_state) {
-            TokenHelper::instance()->clear();
-        }
+
         throw new HttpResponseException(json([
             'code' => $code, 'info' => $info, 'data' => $data,
         ]));
     }
 
-    /**
-     * URL重定向
-     * @param string $url 跳转链接
-     * @param integer $code 跳转代码
-     */
-    public function redirect($url, $code = 301)
-    {
-        throw new HttpResponseException(redirect($url, $code));
-    }
+
 
     /**
      * 返回视图内容
@@ -199,6 +178,7 @@ abstract class Controller extends \stdClass
      */
     protected function _page($dbQuery, $page = true, $display = true, $total = false, $limit = 0)
     {
+        $limit = $limit ? : ( $this->app->request('param.pageSize') ? :0 );
         return PageHelper::instance()->init($dbQuery, $page, $display, $total, $limit);
     }
 

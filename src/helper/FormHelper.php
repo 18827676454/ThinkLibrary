@@ -91,8 +91,8 @@ class FormHelper extends Helper
             if (false !== $this->controller->callback('_form_filter', $data, $this->where)) {
                 $result = data_save($this->query, $data, $this->pkField, $this->where);
                 if (false !== $this->controller->callback('_form_result', $result, $data)) {
-                    if ($result !== false) $this->controller->success('恭喜, 数据保存成功!', '');
-                    $this->controller->error('数据保存失败, 请稍候再试!');
+                    if ($result !== false) $this->controller->success('恭喜, 数据保存成功!');
+                    $this->controller->error(1,'数据保存失败, 请稍候再试!');
                 }
                 return $result;
             }

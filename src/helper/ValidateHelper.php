@@ -51,7 +51,7 @@ class ValidateHelper extends Helper
         if ($this->app->validate->rule($rule)->message($info)->check($data)) {
             return $data;
         } else {
-            $this->controller->error($this->app->validate->getError());
+            $this->controller->error(1,$this->app->validate->getError());
         }
     }
 
